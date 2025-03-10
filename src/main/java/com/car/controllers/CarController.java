@@ -3,6 +3,7 @@ package com.car.controllers;
 import com.car.models.Car;
 import com.car.response.ApiResponse;
 import com.car.services.CarServices;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,7 +29,7 @@ public class CarController {
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse<Car>> addCar(@RequestBody Car car) {
+    public ResponseEntity<ApiResponse<Car>> addCar(@Valid @RequestBody Car car) {
         Car savedCar = carServices.save(car);
         return ResponseEntity.ok(ApiResponse.success("Added car", savedCar));
     }
