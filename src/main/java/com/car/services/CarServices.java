@@ -28,7 +28,16 @@ public class CarServices {
     public void deleteById(int id) {
         carRepository.deleteById(id);
     }
-    public Car update(Car car) {
+    public Car update(int id, Car carDetails) {
+        Car car = carRepository.findById(id).orElseThrow();
+        car.setBrand(carDetails.getBrand());
+        car.setColor(carDetails.getColor());
+        car.setColor(carDetails.getColor());
+        car.setYear(carDetails.getYear());
+        car.setPrice(carDetails.getPrice());
+        car.setLicensePlate(carDetails.getLicensePlate());
+        car.setRentalPricePerDay(carDetails.getRentalPricePerDay());
+        car.setStatus(carDetails.getStatus());
         return carRepository.save(car);
     }
 }

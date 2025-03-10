@@ -13,7 +13,7 @@ import java.util.Map;
 /*******************************************************************
     This class is a global exception handler, specifically handling validation errors that
     occur when processing requests
- ***********************************/
+ **************************************************/
 
 @RestControllerAdvice
 //this annotation makes this class handle exceptions globally across all controllers

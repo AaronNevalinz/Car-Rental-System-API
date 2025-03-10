@@ -4,7 +4,6 @@ import com.car.models.Car;
 import com.car.response.ApiResponse;
 import com.car.services.CarServices;
 import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -47,6 +46,16 @@ public class CarController {
             carServices.deleteById(id);
         }
         return car.map(c->ResponseEntity.ok(ApiResponse.success("Car deleted", c))).orElseGet(()-> ResponseEntity.status(404).body(ApiResponse.error("Car not found", null)));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ApiResponse<Car>> updateCar(@PathVariable int id, @Valid @RequestBody Car car) {
+        Optional<Car> carOptional = carServices.getById(id);
+        if (carOptional.isPresent()) {
+           Car updatedCar = carServices.update(id, car);
+           return ResponseEntity.ok(ApiResponse.success("Car updated", updatedCar));
+        }
+        return ResponseEntity.status(404).body(ApiResponse.error("Car not found", null));
     }
 
 }
