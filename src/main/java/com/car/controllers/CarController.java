@@ -1,5 +1,6 @@
 package com.car.controllers;
 
+import com.car.DTO.CarDTO;
 import com.car.models.Car;
 import com.car.response.ApiResponse;
 import com.car.services.CarServices;
@@ -36,6 +37,7 @@ public class CarController {
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<Car>> getCarById(@PathVariable int id) {
         Optional<Car> car = carServices.getById(id);
+//        CarDTO carDTO = new CarDTO(car.get().getBrand(), car.get().getModel());
         return car.map(c -> ResponseEntity.ok(ApiResponse.success("Got Car", c))).orElseGet(()-> ResponseEntity.status(404).body(ApiResponse.error("Car not found", null)));
     }
 

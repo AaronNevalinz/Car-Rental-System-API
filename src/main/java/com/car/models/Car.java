@@ -1,10 +1,16 @@
 package com.car.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 @Entity
 public class Car {
@@ -20,10 +26,16 @@ public class Car {
     private int year;
     private int price;
 
+    @Column(unique = true)
     private String licensePlate;
     private int rentalPricePerDay;
     private String status;
-    private LocalDate created_at;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date created_at;
+
+    @OneToMany(mappedBy = "car", cascade = CascadeType.ALL, orphanRemoval = true)
+//    @JsonManagedReference
+    private List<Rental> rentals = new ArrayList<>();
 
     public Car() {}
 
@@ -36,7 +48,12 @@ public class Car {
         this.licensePlate = licensePlate;
         this.rentalPricePerDay = rentalPricePerDay;
         this.status = status;
-        this.created_at = LocalDate.now();
+        this.created_at = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
+    }
+
+    @PrePersist
+    protected void onCreate() {
+        created_at = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
     }
 
     public String getStatus() {
@@ -101,5 +118,29 @@ public class Car {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Date getCreated_at() {
+        return created_at;
+    }
+
+    public void setCreated_at(Date created_at) {
+        this.created_at = created_at;
+    }
+
+    public List<Rental> getRentals() {
+        return rentals;
+    }
+
+    public void setRentals(List<Rental> rentals) {
+        this.rentals = rentals;
     }
 }
