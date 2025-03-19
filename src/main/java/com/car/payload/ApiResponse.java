@@ -1,31 +1,31 @@
-package com.car.response;
+package com.car.payload;
 
 
 public class ApiResponse <T>{
-    private String status;
+    private int status;
     private String message;
     private T data;
 
 
-    public ApiResponse(String status, String message, T data) {
+    public ApiResponse(int status, String message, T data) {
         this.status = status;
         this.message = message;
         this.data = data;
     }
 
     public static <T> ApiResponse<T> success(String message, T data) {
-        return new ApiResponse<>("success", message, data);
+        return new ApiResponse<>(200, message, data);
     }
 
     public static <T> ApiResponse<T> error(String message, T data) {
-        return new ApiResponse<>("error", message, data);
+        return new ApiResponse<>(404, message, data);
     }
 
-    public String getStatus() {
+    public int getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(int status) {
         this.status = status;
     }
 

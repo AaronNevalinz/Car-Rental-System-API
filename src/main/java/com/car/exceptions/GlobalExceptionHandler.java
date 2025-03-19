@@ -1,11 +1,13 @@
 package com.car.exceptions;
 
-import com.car.response.ApiResponse;
+import com.car.payload.ApiResponse;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.WebRequest;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,7 +17,7 @@ import java.util.Map;
     occur when processing requests
  **************************************************/
 
-@RestControllerAdvice
+@ControllerAdvice
 //this annotation makes this class handle exceptions globally across all controllers
 //any method inside this class marked with @ExceptionHandler will catch specific exceptions and return
 //a custom response
@@ -42,5 +44,34 @@ public class GlobalExceptionHandler {
             return ApiResponse.error("Validation failed", errors);
         }
         return ApiResponse.error("Validation error", null);
+    }
+
+
+//    resource not found, 404
+    @ExceptionHandler(CustomExceptions.ResourceNotFoundException.class)
+    public ResponseEntity<Map<String, String>> handleResourceNotFoundException(CustomExceptions.ResourceNotFoundException ex, WebRequest request) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse(HttpStatus.BAD_REQUEST, ex.getMessage()));
+    }
+
+//    Validation exception (400)
+    @ExceptionHandler(CustomExceptions.ValidationException.class)
+    public ResponseEntity<Map<String, String>> handleValidationException(CustomExceptions.ValidationException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse(HttpStatus.BAD_REQUEST, ex.getMessage()));
+    }
+
+//    Database exception
+    @ExceptionHandler(CustomExceptions.DatabaseException.class)
+    public ResponseEntity<Map<String, String>> handleDatabaseException(CustomExceptions.DatabaseException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse(HttpStatus.BAD_REQUEST, ex.getMessage()));
+    }
+
+//    Invalid input exception
+
+
+    private Map<String, String> errorResponse(HttpStatus status, String message) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("status", status.value() + "");
+        errors.put("message", message);
+        return errors;
     }
 }

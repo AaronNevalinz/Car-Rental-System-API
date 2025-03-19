@@ -3,9 +3,7 @@ package com.car.models;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -33,8 +31,8 @@ public class Car {
     @Temporal(TemporalType.TIMESTAMP)
     private Date created_at;
 
-    @OneToMany(mappedBy = "car", cascade = CascadeType.ALL, orphanRemoval = true)
-//    @JsonManagedReference
+    @OneToMany(mappedBy = "car", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<Rental> rentals = new ArrayList<>();
 
     public Car() {}

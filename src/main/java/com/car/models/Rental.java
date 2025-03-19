@@ -16,7 +16,7 @@ public class Rental {
 
     @ManyToOne
     @JoinColumn(name = "car_id", nullable = false)
-//    @JsonBackReference // Prevents infinite recursion
+    @JsonBackReference // Prevents infinite recursion
     private Car car;
 
     @JsonProperty("car_id") // This exposes only the car's ID

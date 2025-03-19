@@ -1,4 +1,4 @@
-package com.car.DTO;
+package com.car.payload;
 
 import com.car.models.Rental;
 import com.car.models.rentalStatus;
