@@ -75,13 +75,16 @@ public class CarController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<Car>> getCarById(@PathVariable int id) {
+    public ResponseEntity<ApiResponse<CarDTO>> getCarById(@PathVariable int id) {
 
         Optional<Car> car = carServices.getById(id);
 
         if (car.isPresent()) {
-            return ResponseEntity.ok(ApiResponse.success("Got Car", car.get()));
+            CarDTO carDTO = new CarDTO(car.get());
+            return ResponseEntity.ok(ApiResponse.success("Got Car", carDTO));
         }
+
+
 
         return ResponseEntity.status(404).body(ApiResponse.error("Car not found", null));
     }

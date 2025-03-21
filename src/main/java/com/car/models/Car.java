@@ -35,6 +35,10 @@ public class Car {
     @JsonManagedReference
     private List<Rental> rentals = new ArrayList<>();
 
+    @OneToOne(mappedBy = "car") // this tells jpa that the relationship is mapped in the carLogBook entity
+    @JsonManagedReference
+    private CarLogBook carLogBook;
+
     public Car() {}
 
     public Car(String brand, String model, String color, int year, int price, String licensePlate, int rentalPricePerDay, String status) {
@@ -52,6 +56,14 @@ public class Car {
     @PrePersist
     protected void onCreate() {
         created_at = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
+    }
+
+    public CarLogBook getCarLogBook() {
+        return carLogBook;
+    }
+
+    public void setCarLogBook(CarLogBook carLogBook) {
+        this.carLogBook = carLogBook;
     }
 
     public String getStatus() {
