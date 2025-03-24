@@ -1,7 +1,6 @@
 package com.car.controllers;
 
 import com.car.payload.RentalDTO;
-import com.car.exceptions.CustomExceptions;
 import com.car.models.Car;
 import com.car.models.Rental;
 import com.car.payload.ApiResponse;
@@ -42,8 +41,6 @@ public class RentalController {
             }
 
             return ResponseEntity.ok(ApiResponse.error("No rentals found", null));
-        } catch(CustomExceptions.DatabaseException ex){
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(ApiResponse.error("Database error: " + ex.getMessage(), null));
         } catch (Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ApiResponse.error("Internal server error: " + e.getMessage(), null));
         }

@@ -1,5 +1,6 @@
 package com.car.services;
 
+import com.car.exceptions.NotFoundException;
 import com.car.models.Car;
 import com.car.repository.CarRepository;
 import org.springframework.data.domain.Page;
@@ -34,17 +35,13 @@ public class CarServices {
         carRepository.deleteById(id);
     }
 
-    public Car update(int id, Car carDetails) {
-        Car car = carRepository.findById(id).orElseThrow();
-        car.setBrand(carDetails.getBrand());
-        car.setColor(carDetails.getColor());
-        car.setColor(carDetails.getColor());
-        car.setYear(carDetails.getYear());
-        car.setPrice(carDetails.getPrice());
-        car.setLicensePlate(carDetails.getLicensePlate());
-        car.setRentalPricePerDay(carDetails.getRentalPricePerDay());
-        car.setStatus(carDetails.getStatus());
-        return carRepository.save(car);
+    public List<Car> sortCars(String field, String direction){
+        try {
+            Sort.Direction sortDirection = direction.equalsIgnoreCase("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
+            return carRepository.findAll(Sort.by(sortDirection, field));
+        } catch (Exception e) {
+             throw new NotFoundException(e.getMessage());
+        }
     }
 
     public List<Car> sortBasedUponSomeField(String field) {

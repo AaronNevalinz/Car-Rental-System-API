@@ -34,11 +34,15 @@ public class CarController {
         });
         return ResponseEntity.ok(ApiResponse.success("All cars", carDTO));
     }
+//    sort the cars
+
+
+
 
 //    sort the cars based upon some field
     @GetMapping("/sort/{field}")
-    public ResponseEntity<ApiResponse<List<CarDTO>>> sort(@PathVariable("field") String field) {
-        List<Car> cars = carServices.sortBasedUponSomeField(field);
+    public ResponseEntity<ApiResponse<List<CarDTO>>> sort(@PathVariable("field") String field, @RequestParam(defaultValue = "asc") String direction ) {
+        List<Car> cars = carServices.sortCars(field, direction);
         List<CarDTO> carDTO = new ArrayList<>();
         cars.forEach(car -> {
             carDTO.add(new CarDTO(car));
@@ -68,7 +72,7 @@ public class CarController {
         return ResponseEntity.ok(ApiResponse.success("Sorted cars", carDTO));
     }
 
-    @PostMapping
+    @PostMapping("/upload")
     public ResponseEntity<ApiResponse<Car>> addCar(@Valid @RequestBody Car car) {
         Car savedCar = carServices.save(car);
         return ResponseEntity.ok(ApiResponse.success("Added car", savedCar));
