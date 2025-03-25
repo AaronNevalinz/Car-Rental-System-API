@@ -2,13 +2,13 @@ package com.car.payload;
 
 
 public class ApiResponse <T>{
-    private int status;
+    private int status_code;
     private String message;
     private T data;
 
 
     public ApiResponse(int status, String message, T data) {
-        this.status = status;
+        this.status_code = status;
         this.message = message;
         this.data = data;
     }
@@ -22,11 +22,11 @@ public class ApiResponse <T>{
     }
 
     public int getStatus() {
-        return status;
+        return status_code;
     }
 
     public void setStatus(int status) {
-        this.status = status;
+        this.status_code = status;
     }
 
     public String getMessage() {

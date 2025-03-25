@@ -1,5 +1,6 @@
 package com.car.controllers;
 
+import com.car.exceptions.CarLogbookDataIntegrityException;
 import com.car.models.Car;
 import com.car.models.CarLogBook;
 import com.car.payload.ApiResponse;
@@ -8,14 +9,13 @@ import com.car.services.CarLogBookServices;
 import com.car.services.CarServices;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/car/logbook")
@@ -42,7 +42,7 @@ public class CarLogBookController {
     }
 
     @PostMapping("/upload/{id}")
-    public ResponseEntity<ApiResponse<LogBookDTO>> uploadCarLogBook(@PathVariable int id, @RequestBody MultipartFile file) throws IOException {
+    public ResponseEntity<ApiResponse<?>> uploadCarLogBook(@PathVariable int id, @RequestBody MultipartFile file) throws Exception {
         Optional<Car> car = carServices.getById(id);
         CarLogBook logBook = new CarLogBook();
         logBook.setFileContent(file.getBytes());
@@ -51,10 +51,18 @@ public class CarLogBookController {
         logBook.setFileSize(file.getSize());
         logBook.setCar(car.get());
 
-        CarLogBook savedBook = carLogBookServices.uploadCarLogBook(id, logBook);
+        try{
+            CarLogBook savedBook = carLogBookServices.uploadCarLogBook(id, logBook);
 
-        LogBookDTO logBookDTO = new LogBookDTO(savedBook);
+            LogBookDTO logBookDTO = new LogBookDTO(savedBook);
 
-        return ResponseEntity.ok(ApiResponse.success("Log Book added", logBookDTO));
+            return ResponseEntity.ok(ApiResponse.success("Log Book added", logBookDTO));
+        }catch ( DataIntegrityViolationException e){
+            Map<String, String> errors = new HashMap<>();
+            errors.put("message", e.getMessage());
+            errors.put("cause", "DataIntegrityViolationException");
+            errors.put("error_code", "404");
+            return ResponseEntity.ok(ApiResponse.error(e.getMessage(), errors));
+        }
     }
 }

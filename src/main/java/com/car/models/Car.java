@@ -1,5 +1,6 @@
 package com.car.models;
 
+import com.car.validators.UniqueLicensePlate;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -24,7 +25,8 @@ public class Car {
     private int year;
     private int price;
 
-    @Column(unique = true)
+//    @NotBlank(message = "Must not be Empty and null")
+    @UniqueLicensePlate
     private String licensePlate;
     private int rentalPricePerDay;
     private String status;

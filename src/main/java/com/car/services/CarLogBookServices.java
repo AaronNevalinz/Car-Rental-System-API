@@ -4,6 +4,7 @@ import com.car.models.Car;
 import com.car.models.CarLogBook;
 import com.car.repository.CarLogBookRepository;
 import com.car.repository.CarRepository;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,6 +28,10 @@ public class CarLogBookServices {
 
         logBook.setCar(car.get());
 
-        return carLogBookRepository.save(logBook);
+        try{
+            return carLogBookRepository.save(logBook);
+        }catch (DataIntegrityViolationException ex){
+            throw new DataIntegrityViolationException("Logbook violates unique constraints.");
+        }
     }
 }
