@@ -1,6 +1,7 @@
 package com.car.controllers;
 
 import com.car.exceptions.CarLogbookDataIntegrityException;
+import com.car.exceptions.NotFoundException;
 import com.car.models.Car;
 import com.car.models.CarLogBook;
 import com.car.payload.ApiResponse;
@@ -44,6 +45,8 @@ public class CarLogBookController {
     @PostMapping("/upload/{id}")
     public ResponseEntity<ApiResponse<?>> uploadCarLogBook(@PathVariable int id, @RequestBody MultipartFile file) throws Exception {
         Optional<Car> car = carServices.getById(id);
+
+
         CarLogBook logBook = new CarLogBook();
         logBook.setFileContent(file.getBytes());
         logBook.setFileName(file.getOriginalFilename());

@@ -24,7 +24,11 @@ public class CarServices {
     }
 
     public Optional<Car> getById(int id) {
-        return carRepository.findById(id);
+        try{
+            return carRepository.findById(id);
+        }catch (Exception e){
+            throw new NotFoundException(e.getMessage());
+        }
     }
 
     public Car save(Car car) {
@@ -52,8 +56,9 @@ public class CarServices {
         return carRepository.findAll(PageRequest.of(offset, pageSize));
     }
 
-    public Page<Car> getCarsWithPaginationAndSort(int offset, int pageSize, String sortField) {
-        return carRepository.findAll(PageRequest.of(offset, pageSize).withSort(Sort.by(Sort.Direction.DESC, sortField)));
+    public Page<Car> getCarsWithPaginationAndSort(int offset, int pageSize, String sortField, String direction) {
+        Sort.Direction sortDirection = direction.equalsIgnoreCase("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
+        return carRepository.findAll(PageRequest.of(offset, pageSize).withSort(Sort.by(sortDirection, sortField)));
     }
 
     public List<Car> findCarsWithSorting(String sortField) {

@@ -1,5 +1,6 @@
 package com.car.services;
 
+import com.car.exceptions.NotFoundException;
 import com.car.models.Car;
 import com.car.models.CarLogBook;
 import com.car.repository.CarLogBookRepository;
@@ -25,6 +26,7 @@ public class CarLogBookServices {
 
     public CarLogBook uploadCarLogBook(int id, CarLogBook logBook) {
         Optional<Car> car = carRepository.findById(id);
+
 
         logBook.setCar(car.get());
 

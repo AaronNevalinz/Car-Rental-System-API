@@ -18,11 +18,15 @@ public class Rental {
     @JoinColumn(name = "car_id", nullable = false)
     @JsonBackReference // Prevents infinite recursion
     private Car car;
-
     @JsonProperty("car_id") // This exposes only the car's ID
     public Long getCarId() {
         return car != null ? car.getId() : null;
     }
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
 
     private LocalDateTime startDate;
     private LocalDateTime endDate;
@@ -33,6 +37,14 @@ public class Rental {
 
     public Car getCar() {
         return car;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public void setCar(Car car) {
@@ -67,8 +79,9 @@ public class Rental {
         return status;
     }
 
-    public void setStatus(rentalStatus status) {
+    public rentalStatus setStatus(rentalStatus status) {
         this.status = status;
+        return status;
     }
 
     public Long getId() {

@@ -21,14 +21,17 @@ public class UniqueLicensePlateValidator implements ConstraintValidator<UniqueLi
 
     @Override
     public boolean isValid(String licensePlate, ConstraintValidatorContext context) {
-        if (licensePlate == null || licensePlate.trim().isEmpty()) {
-            return true; // Allow empty or null values
-        }
+        if (licensePlate == null) {
+            System.out.println("truthy");
 
-        try{
-            return !carRepository.existsByLicensePlate(licensePlate);
-        }catch (ValidationException e){
-            throw new ValidationException(e.getMessage());
+            return true; // Allow empty or null values
+        } else {
+            try {
+                System.out.println("Working");
+                return !carRepository.existsByLicensePlate(licensePlate);
+            } catch (ValidationException e) {
+                throw new ValidationException(e.getMessage());
+            }
         }
     }
 }

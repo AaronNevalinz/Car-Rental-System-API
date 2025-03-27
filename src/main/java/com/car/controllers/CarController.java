@@ -51,8 +51,8 @@ public class CarController {
     }
 
 // Pagination of cars
-    @GetMapping("/pagination/{offset}/{pageSize}")
-    public ResponseEntity<ApiResponse<List<CarDTO>>> pagination(@PathVariable("offset") int offset, @PathVariable("pageSize") int pageSize) {
+    @GetMapping("/pagination")
+    public ResponseEntity<ApiResponse<List<CarDTO>>> pagination(@RequestParam int pageSize, @RequestParam int offset) {
         Page<Car> cars = carServices.getCarsWithPagination(offset, pageSize);
         List<CarDTO> carDTO = new ArrayList<>();
         cars.forEach(car -> {
@@ -62,9 +62,9 @@ public class CarController {
     }
 
     // Pagination with sorting of cars
-    @GetMapping("/paginationwithsorting/{offset}/{pageSize}/{field}")
-    public ResponseEntity<ApiResponse<List<CarDTO>>> paginationWithSorting(@PathVariable("offset") int offset, @PathVariable("pageSize") int pageSize, @PathVariable("field") String field) {
-        Page<Car> cars = carServices.getCarsWithPaginationAndSort(offset, pageSize, field);
+    @GetMapping("/paginationwithsorting/{field}")
+    public ResponseEntity<ApiResponse<List<CarDTO>>> paginationWithSorting(@RequestParam int offset, @RequestParam int pageSize, @RequestParam(defaultValue = "asc") String direction, @PathVariable("field") String field) {
+        Page<Car> cars = carServices.getCarsWithPaginationAndSort(offset, pageSize, field, direction);
         List<CarDTO> carDTO = new ArrayList<>();
         cars.forEach(car -> {
             carDTO.add(new CarDTO(car));
@@ -87,9 +87,6 @@ public class CarController {
             CarDTO carDTO = new CarDTO(car.get());
             return ResponseEntity.ok(ApiResponse.success("Got Car", carDTO));
         }
-
-
-
         return ResponseEntity.status(404).body(ApiResponse.error("Car not found", null));
     }
 

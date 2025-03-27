@@ -1,6 +1,7 @@
 package com.car.payload;
 
 import com.car.models.Car;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class CarDTO {
     private Long id;
