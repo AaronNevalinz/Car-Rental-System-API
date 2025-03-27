@@ -44,17 +44,19 @@ public class CarLogBookController {
 
     @PostMapping("/upload/{id}")
     public ResponseEntity<ApiResponse<?>> uploadCarLogBook(@PathVariable int id, @RequestBody MultipartFile file) throws Exception {
-        Optional<Car> car = carServices.getById(id);
 
-
-        CarLogBook logBook = new CarLogBook();
-        logBook.setFileContent(file.getBytes());
-        logBook.setFileName(file.getOriginalFilename());
-        logBook.setFileType(file.getContentType());
-        logBook.setFileSize(file.getSize());
-        logBook.setCar(car.get());
 
         try{
+            Optional<Car> car = carServices.getById(id);
+
+
+            CarLogBook logBook = new CarLogBook();
+            logBook.setFileContent(file.getBytes());
+            logBook.setFileName(file.getOriginalFilename());
+            logBook.setFileType(file.getContentType());
+            logBook.setFileSize(file.getSize());
+            logBook.setCar(car.get());
+
             CarLogBook savedBook = carLogBookServices.uploadCarLogBook(id, logBook);
 
             LogBookDTO logBookDTO = new LogBookDTO(savedBook);
@@ -63,8 +65,11 @@ public class CarLogBookController {
         }catch ( DataIntegrityViolationException e){
             Map<String, String> errors = new HashMap<>();
             errors.put("message", e.getMessage());
-            errors.put("cause", "DataIntegrityViolationException");
             errors.put("error_code", "404");
+            return ResponseEntity.ok(ApiResponse.error(e.getMessage(), errors));
+        } catch (Exception e) {
+            Map<String, String> errors = new HashMap<>();
+            errors.put("error", e.getMessage()+"for car id: "+id);
             return ResponseEntity.ok(ApiResponse.error(e.getMessage(), errors));
         }
     }

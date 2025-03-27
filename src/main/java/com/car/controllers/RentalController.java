@@ -68,11 +68,11 @@ public class RentalController {
                 Rental carRentalDetails = rentalServices.createRental(car_id, user_id, rental);
                 return ResponseEntity.ok(ApiResponse.success("Rental added", new RentalDTO(carRentalDetails)));
             } else{
-                throw new NotFoundException("Invalid credentials...");
+                throw new NotFoundException("Invalid credentials.....");
             }
 //            return ResponseEntity.status(404).body(ApiResponse.error("Car not found", null));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ApiResponse.error("Internal server error: " + e.getMessage(), null));
+            return ResponseEntity.ok(ApiResponse.error(e.getMessage(), null));
         }
     }
 }
