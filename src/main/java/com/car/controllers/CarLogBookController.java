@@ -1,13 +1,13 @@
 package com.car.controllers;
 
-import com.car.exceptions.CarLogbookDataIntegrityException;
-import com.car.exceptions.NotFoundException;
 import com.car.models.Car;
 import com.car.models.CarLogBook;
+import com.car.models.User;
 import com.car.payload.ApiResponse;
 import com.car.payload.LogBookDTO;
 import com.car.services.CarLogBookServices;
 import com.car.services.CarServices;
+import com.car.services.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -15,7 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
+import java.io.FileNotFoundException;
 import java.util.*;
 
 @RestController
@@ -24,10 +24,12 @@ public class CarLogBookController {
     private static final Logger log = LoggerFactory.getLogger(CarLogBookController.class);
     private final CarLogBookServices carLogBookServices;
     private final CarServices carServices;
+    private final UserService userService;
 
-    public CarLogBookController(CarLogBookServices carLogBookServices, CarServices carServices) {
+    public CarLogBookController(CarLogBookServices carLogBookServices, CarServices carServices, UserService userService) {
         this.carLogBookServices = carLogBookServices;
         this.carServices = carServices;
+        this.userService = userService;
     }
 
     @GetMapping
@@ -72,5 +74,11 @@ public class CarLogBookController {
             errors.put("error", e.getMessage()+"for car id: "+id);
             return ResponseEntity.ok(ApiResponse.error(e.getMessage(), errors));
         }
+    }
+
+    @GetMapping("/download/{user_id}/{id}")
+    public ResponseEntity<byte[]> downloadFile(@PathVariable Long id){
+        CarLogBook pdfFile = carLogBookServices.getLogBookById(id);
+        return ResponseEntity.ok().header("Content-Type", "application/pdf").body(pdfFile.getFileContent());
     }
 }

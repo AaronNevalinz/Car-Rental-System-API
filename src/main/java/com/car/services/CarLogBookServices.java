@@ -1,6 +1,7 @@
 package com.car.services;
 
 import com.car.exceptions.NotFoundException;
+import com.car.exceptions.ResourceNotFound;
 import com.car.models.Car;
 import com.car.models.CarLogBook;
 import com.car.repository.CarLogBookRepository;
@@ -35,5 +36,9 @@ public class CarLogBookServices {
         }catch (DataIntegrityViolationException ex){
             throw new DataIntegrityViolationException("Logbook violates unique constraints.");
         }
+    }
+
+    public CarLogBook getLogBookById(Long id) {
+        return carLogBookRepository.findById(id).orElseThrow(()-> new ResourceNotFound("Car Log book not found"));
     }
 }

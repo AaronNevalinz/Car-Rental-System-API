@@ -2,6 +2,7 @@ package com.car.exceptions;
 
 import com.car.payload.ErrorResponse;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -29,5 +30,13 @@ public class GlobalExceptionHandler {
     public ErrorResponse handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
         String message = "Data integrity violation occurred: " + ex.getMessage();
         return new ErrorResponse("DATA_INTEGRITY_ERROR", message);
+    }
+
+    @ExceptionHandler(ResourceNotFound.class)
+    public ResponseEntity<Map<String, Object>> handleResourceNotFoundException(ResourceNotFound ex) {
+        Map<String, Object> errors = new HashMap<>();
+        errors.put("message", ex.getMessage());
+        errors.put("code", 404);
+        return new ResponseEntity<>(errors, HttpStatus.NOT_FOUND);
     }
 }
